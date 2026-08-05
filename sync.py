@@ -81,14 +81,78 @@ def get_course(course_id):
 # --------------------
 # Google Calendar functions
 # --------------------
+DAY_CODES = {
+    "Monday": "M",
+    "Tuesday": "T",
+    "Wednesday": "W",
+    "Thursday": "TH",
+    "Friday": "F",
+    "Saturday": "S",
+    "Sunday": "SU"
+}
 
-def create_event(title, date, start_time):
 
-    start_time = start_time.split("-")[0].strip()
+def parse_days(days):
+    result = []
+    i = 0
+
+    while i < len(days):
+        if days.startswith("TH", i):
+            result.append("TH")
+            i += 2
+        elif days.startswith("SU", i):
+            result.append("SU")
+            i += 2
+        else:
+            result.append(days[i])
+            i += 1
+
+    return result
+
+
+def get_start_time(schedule, date):
+
+    weekday = datetime.strptime(date, "%Y-%m-%d").strftime("%A")
+    code = DAY_CODES[weekday]
+
+    for line in schedule.splitlines():
+
+        line = line.strip()
+
+        if not line:
+            continue
+
+        parts = line.split(" ", 1)
+
+        if len(parts) != 2:
+            continue
+
+        days = parts[0]
+        times = parts[1]
+
+        if code in parse_days(days):
+            return times.split("-")[0].strip()
+
+    return None
+    
+def create_event(title, date, schedule):
+
+    start_time = get_start_time(schedule, date)
+
+    if start_time is None:
+        raise Exception(
+            f"No meeting time found for {title} on {date}"
+        )
+
+    # Supports both "11 AM" and "11:15 AM"
+    if ":" in start_time:
+        fmt = "%Y-%m-%d %I:%M %p"
+    else:
+        fmt = "%Y-%m-%d %I %p"
 
     dt = datetime.strptime(
         f"{date} {start_time}",
-        "%Y-%m-%d %I:%M %p"
+        fmt
     )
 
     end = dt + timedelta(minutes=1)
