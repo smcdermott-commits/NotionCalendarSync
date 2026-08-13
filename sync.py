@@ -127,9 +127,34 @@ def get_start_time(schedule, date):        # Some classes meet at different time
         times = parts[1]
 
         if code in parse_days(days):                                   # Runs function parse_days to return list of days class meets listed in current line; if week day of assignmnet due date is 
-            return times.split("-")[0].strip()                         # listed in this line, take the times and split into start and end time (Ex. "11:15 AM - 12:00 PM" --> ["11:15 AM "," 12:00 PM"]),
+                                                                         # listed in this line, take the times and split into start and end time (Ex. "11:15 AM - 12:00 PM" --> ["11:15 AM "," 12:00 PM"]),
                                                                        # then only takes 1st item (start time)
+            # Split the time range into start and end
+            time_parts = times.split("-", 1)
 
+            if len(time_parts) != 2:
+                continue
+
+            start = time_parts[0].strip()
+            end = time_parts[1].strip()
+
+            # Determine AM/PM from the time range
+            if "AM" in start.upper():
+                period = "AM"
+            elif "PM" in start.upper():
+                period = "PM"
+            elif "AM" in end.upper():
+                period = "AM"
+            elif "PM" in end.upper():
+                period = "PM"
+            else:
+                continue
+
+            # Add AM/PM to the start time if it isn't already there
+            if "AM" not in start.upper() and "PM" not in start.upper():
+                start = f"{start} {period}"
+
+            return start
     return None
     
 def create_event(title, date, schedule):
@@ -140,44 +165,6 @@ def create_event(title, date, schedule):
         raise Exception(
             f"No meeting time found for {title} on {date}"
         )
-        
-    weekday = datetime.strptime(date, "%Y-%m-%d").strftime("%A")
-    code = DAY_CODES[weekday]
-
-    period = None                                                # New variable for AM/PM
-
-    for line in schedule.splitlines():
-        line = line.strip()
-
-        if not line:
-            continue
-
-        parts = line.split(" ", 1)
-
-        if len(parts) != 2:
-            continue
-
-        days = parts[0]
-        times = parts[1]
-
-        if code in parse_days(days):
-
-                                                                    # Look for AM/PM anywhere in line for cases like "8:10 - 9:25 AM" where both times are AM/PM
-            if "AM" in times.upper():
-                period = "AM"
-            elif "PM" in times.upper():
-                period = "PM"
-
-            break
-
-    if period is None:
-        raise Exception(
-            f"Could not determine AM/PM for {title} on {date}"
-        )
-
-                                                                    # Add AM/PM if the start time doesn't already have it
-    if "AM" not in start_time.upper() and "PM" not in start_time.upper():
-        start_time = f"{start_time} {period}"
 
     
                                                                 # Figure out if format is "11 AM" or "11:15 AM"; converts to HH:MM if no minutes are listed (at top of hour)
