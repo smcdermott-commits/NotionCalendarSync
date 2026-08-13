@@ -8,8 +8,6 @@ import os
 load_dotenv()
 
 # --------------------
-# Setup
-# --------------------
 
 notion = Client(auth=os.getenv("NOTION_TOKEN"))
 
@@ -31,8 +29,6 @@ COURSES_DB = os.getenv("COURSES_DATABASE_ID")
 
 
 # --------------------
-# Helper functions
-# --------------------
 
 def get_title(prop):
     if not prop["title"]:
@@ -41,13 +37,13 @@ def get_title(prop):
 
 
 def get_text(prop):
-    if not prop or "rich_text" not in prop:
+    if not prop or "rich_text" not in prop:            # Check if property exists and contains anything
         return ""
 
-    if not prop["rich_text"]:
+    if not prop["rich_text"]:                          # Check if property has rich text field
         return ""
 
-    return prop["rich_text"][0]["plain_text"]
+    return prop["rich_text"][0]["plain_text"]          # Returns first plain text item in property
 
 
 def get_date(prop):
@@ -65,7 +61,7 @@ def get_relation(prop):
 # Get course info
 # --------------------
 
-def get_course(course_id):
+def get_course(course_id):                            # Retrieves course info from related page
 
     page = notion.pages.retrieve(course_id)
 
@@ -81,7 +77,7 @@ def get_course(course_id):
 # --------------------
 # Google Calendar functions
 # --------------------
-DAY_CODES = {
+DAY_CODES = {         
     "Monday": "M",
     "Tuesday": "T",
     "Wednesday": "W",
@@ -92,11 +88,11 @@ DAY_CODES = {
 }
 
 
-def parse_days(days):
+def parse_days(days):                                   # Converts block of days into list of day codes course takes place on (Ex. MWF = [M, W, F])
     result = []
     i = 0
 
-    while i < len(days):
+    while i < len(days):                                # TH and SU are special cases for parsing day of week of course, otherwise day codes correlate
         if days.startswith("TH", i):
             result.append("TH")
             i += 2
@@ -110,28 +106,29 @@ def parse_days(days):
     return result
 
 
-def get_start_time(schedule, date):
+def get_start_time(schedule, date):        # Some classes meet at different times on different days of the week, so function compares due date with listed day to see which line applies
 
-    weekday = datetime.strptime(date, "%Y-%m-%d").strftime("%A")
+    weekday = datetime.strptime(date, "%Y-%m-%d").strftime("%A")       # Converts due date listed in assignment tracker to string day of the week (ex. 2026-08-11 returns as Tuesday)
     code = DAY_CODES[weekday]
 
-    for line in schedule.splitlines():
+    for line in schedule.splitlines():                                 # Splits multi-line entries in schedule into separate strings, one for each line
 
-        line = line.strip()
+        line = line.strip()                                            # Removes unecessary spaces
 
-        if not line:
+        if not line:                                                   # Skips empty lines
             continue
 
-        parts = line.split(" ", 1)
+        parts = line.split(" ", 1)                                     # Only splits line into multiple strings at first space (Ex. "MW 11 - 11:50 AM" turns into ["MW", "11 - 11:50 AM"])
 
-        if len(parts) != 2:
+        if len(parts) != 2:                                            # Checks that line is split into only 2 strings; if it's wrong, program skips entire line to prevent it from breaking
             continue
 
-        days = parts[0]
+        days = parts[0]                                                # Assigns first part of line as days and second part as times
         times = parts[1]
 
-        if code in parse_days(days):
-            return times.split("-")[0].strip()
+        if code in parse_days(days):                                   # Runs function parse_days to return list of days class meets listed in current line; if week day of assignmnet due date is 
+            return times.split("-")[0].strip()                         # listed in this line, take the times and split into start and end time (Ex. "11:15 AM - 12:00 PM" --> ["11:15 AM "," 12:00 PM"]),
+                                                                       # then only takes 1st item (start time)
 
     return None
     
@@ -144,7 +141,7 @@ def create_event(title, date, schedule):
             f"No meeting time found for {title} on {date}"
         )
 
-    # Supports both "11 AM" and "11:15 AM"
+                                                # Figure out if format is "11 AM" or "11:15 AM"; converts to HH:MM if no minutes are listed (at top of hour)
     if ":" in start_time:
         fmt = "%Y-%m-%d %I:%M %p"
     else:
@@ -155,7 +152,7 @@ def create_event(title, date, schedule):
         fmt
     )
 
-    end = dt + timedelta(minutes=1)
+    end = dt + timedelta(minutes=1)                    # End time is 1 minute after start
 
     event = {
         "summary": title,
@@ -194,20 +191,20 @@ def delete_event(event_id):
 
 # --------------------
 # Main sync
-# --------------------
+# --------------------                       
 
-results = notion.databases.retrieve(
+results = notion.databases.retrieve(                        
     database_id=DEADLINES_DB
 )
 
-data_source = results["data_sources"][0]["id"]
+data_source = results["data_sources"][0]["id"]                   
 
 assignments = notion.data_sources.query(
     data_source_id=data_source
 )
 
 
-for assignment in assignments["results"]:
+for assignment in assignments["results"]:                    # Lists properties for each assignment in database
 
     props = assignment["properties"]
 
@@ -222,7 +219,7 @@ for assignment in assignments["results"]:
     # Delete completed tasks
     # --------------------
 
-    if status == "Done":
+    if status == "Done":                                    # If property "Status" is set to "Done", deletes google calendar event
 
         if google_event_id:
 
@@ -258,12 +255,12 @@ for assignment in assignments["results"]:
 
     course_name, course_time = get_course(course_id)
 
-    title = f"{name} - {course_name}"
+    title = f"{name} - {course_name}"                    # Combines assignment name and course name to make title listed on google calendar event (Ex. Problem Set 3 - Physics)
 
 
     # Prevent duplicates
 
-    if google_event_id:
+    if google_event_id:                                # If there is already a google event id in that property, program recognizes that the event has already been created and verifies that info is up to date
         print("Already synced:", title)
         continue
 
