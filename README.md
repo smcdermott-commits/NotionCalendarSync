@@ -29,21 +29,21 @@ This project automatically creates Google Calendar events from assignments store
 ## Setup
 Assignments are added to the notion Deadlines database with course listed as relation to respective page.
 
-![alt text](image.png)
+<img width="1919" height="530" alt="image" src="https://github.com/user-attachments/assets/fc2cc274-2013-40f3-8320-cd96cd398dab" />
 
 Course pages list times at which courses gather, which informs times at which deadlines are listed in Google Calendar.
 
-![alt text](<Screenshot 2026-08-13 130310-1.png>)
+<img width="1917" height="699" alt="image" src="https://github.com/user-attachments/assets/bdc9efb4-152a-40f8-8bd2-c7ce61cb1518" />
 
 Some courses meet at different times on different days of the week. The program can parse for which line and respective meeting time applies for the day of the deadline.
 
-![alt text](<Screenshot 2026-08-13 155400-1.png>)
+<img width="962" height="450" alt="image" src="https://github.com/user-attachments/assets/2a59ef62-b2ea-4791-a05d-a5664b12471f" />
 
 ## Execution
 
 The program runs on an adjustable timer, ___. Assignments with no assigned google event ID are read as new and added to the calendar; assignemnts with an assigned ID are read as already created. Assignemnts that have already been created but are now marked as complete are deleted from the calendar.
 
-![alt text](<Screenshot 2026-08-13 134220-1.png>)
+<img width="1674" height="900" alt="image" src="https://github.com/user-attachments/assets/c8178139-591e-42cd-9644-1f92039b15b3" />
 
 ## Program Structure
 ```mermaid
