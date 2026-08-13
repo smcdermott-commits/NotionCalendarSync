@@ -3,6 +3,12 @@ An automated coursework management system that synchronizes assignments from a N
 
 This project automatically creates Google Calendar events from assignments stored in a Notion coursework database. Each assignment is matched with its corresponding course and meeting schedule, including day-specific class times. When an assignment is marked complete in Notion, its corresponding Google Calendar event is automatically deleted.
 
+## Development
+
+This project is continuously developed and refined as new features, edge cases, and improvements are identified.
+
+[View the development log](DEVELOPMENT.md)
+
 ## Features
 > __Notion API integration__
 > * Reads assignments, deadlines, course information, and completion status. 
@@ -44,6 +50,8 @@ Some courses meet at different times on different days of the week. The program 
 The program runs on an adjustable timer, ___. Assignments with no assigned google event ID are read as new and added to the calendar; assignemnts with an assigned ID are read as already created. Assignemnts that have already been created but are now marked as complete are deleted from the calendar.
 
 <img width="1674" height="900" alt="image" src="https://github.com/user-attachments/assets/c8178139-591e-42cd-9644-1f92039b15b3" />
+
+And done! My deadlines are now in my precious google calendar :)
 
 ## Program Structure
 ```mermaid
