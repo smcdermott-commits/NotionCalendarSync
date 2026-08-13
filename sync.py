@@ -158,11 +158,11 @@ def get_start_time(schedule, date):        # Some classes meet at different time
     return None
     
 def create_event(title, date, schedule):
-
+    start_time = get_start_time(schedule, date)
+    
     print("DEBUG start_time:", repr(start_time))
     print("DEBUG schedule:", repr(schedule))
 
-    start_time = get_start_time(schedule, date)
 
     print("Start time returned:", repr(start_time))
 
