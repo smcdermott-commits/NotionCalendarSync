@@ -2,7 +2,7 @@ name: Notion Calendar Sync
 
 on:
   schedule:
-    - cron: '0 */10 * * *'
+    - cron: '0 */24 * * *'
 
   workflow_dispatch:
 jobs:
