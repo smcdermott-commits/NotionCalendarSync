@@ -210,6 +210,10 @@ def build_event(title, deadline, schedule, notion_url):
                                                     # Default assignment event duration
         end_dt = start_dt + timedelta(minutes=30)
 
+    print("EVENT DEBUG:")
+    print("  Title:", title)
+    print("  Start:", start_dt)
+    print("  End:", end_dt)
     return {
         "summary": title,
         "description": f"Open assignment in Notion:\n{notion_url}",
