@@ -329,7 +329,7 @@ for assignment in assignments["results"]:                    # Lists properties 
     event_id = create_event(
         title,
         deadline,
-        course_time
+        course_time,
         notion_url
     )
 
