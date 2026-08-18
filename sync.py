@@ -176,7 +176,7 @@ def create_event(title, deadline, schedule, notion_url):
         if end and "T" in end:
             end_dt = datetime.fromisoformat(end)
         else:
-            end_dt = start_dt + timedelta(minutes=1)
+            end_dt = start_dt + timedelta(minutes=30)
 
     # --------------------------------
     # No time listed in Notion
@@ -202,7 +202,7 @@ def create_event(title, deadline, schedule, notion_url):
             fmt
         )
 
-        end_dt = start_dt + timedelta(minutes=1)
+        end_dt = start_dt + timedelta(minutes=30)
 
     # --------------------------------
     # Create Google Calendar event
