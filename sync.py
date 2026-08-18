@@ -343,43 +343,43 @@ for assignment in assignments["results"]:                    # Lists properties 
 
     # Prevent duplicates
 
-if google_event_id:
-
-    update_event(
-        google_event_id,
-        title,
-        deadline,
-        course_time,
-        notion_url
-    )
-
-    print("Updated:", title)
-
-    continue
-
-
-    event_id = create_event(
-        title,
-        deadline,
-        course_time,
-        notion_url
-    )
-
-
-    notion.pages.update(
-        page_id=assignment["id"],
-        properties={
-            "Google Event ID": {
-                "rich_text": [
-                    {
-                        "text": {
-                            "content": event_id
+    if google_event_id:
+    
+        update_event(
+            google_event_id,
+            title,
+            deadline,
+            course_time,
+            notion_url
+        )
+    
+        print("Updated:", title)
+    
+        continue
+    
+    
+        event_id = create_event(
+            title,
+            deadline,
+            course_time,
+            notion_url
+        )
+    
+    
+        notion.pages.update(
+            page_id=assignment["id"],
+            properties={
+                "Google Event ID": {
+                    "rich_text": [
+                        {
+                            "text": {
+                                "content": event_id
+                            }
                         }
-                    }
-                ]
+                    ]
+                }
             }
-        }
-    )
+        )
 
 
     print("Created:", title)
