@@ -300,17 +300,16 @@ assignments = notion.data_sources.query(
 )
 
 
-for assignment in assignments["results"]:                    # Lists properties for each assignment in database
+for assignment in assignments["results"]:
 
-     props = assignment["properties"]
+    props = assignment["properties"]
 
     print("\nPROCESSING:", get_title(props["Name"]))
     print("Status:", props["Status"]["status"]["name"])
     print("Google Event ID:", get_text(props["Google Event ID"]))
-    
 
     notion_url = assignment["url"]
-    
+
     status = props["Status"]["status"]["name"]
 
     name = get_title(props["Name"])
@@ -322,7 +321,7 @@ for assignment in assignments["results"]:                    # Lists properties 
     # Delete completed tasks
     # --------------------
 
-    if status == "Done":                                    # If property "Status" is set to "Done", deletes google calendar event
+    if status == "Done":
 
         if google_event_id:
 
@@ -344,11 +343,11 @@ for assignment in assignments["results"]:                    # Lists properties 
 
 
     # --------------------
-    # Create new events
+    # Create/update events
     # --------------------
 
     deadline = get_date(props["Deadline"])
-    
+
     if deadline is None:
         print("No deadline:", name)
         continue
@@ -359,11 +358,9 @@ for assignment in assignments["results"]:                    # Lists properties 
         print("No course:", name)
         continue
 
-
     course_name, course_time = get_course(course_id)
 
-    title = f"{name} - {course_name}"                    # Combines assignment name and course name to make title listed on google calendar event (Ex. Problem Set 3 - Physics)
-
+    title = f"{name} - {course_name}"
 
     # Prevent duplicates
 
