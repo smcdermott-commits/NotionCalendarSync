@@ -4,7 +4,8 @@ from googleapiclient.discovery import build
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 import os
-
+print("RUNNING SYNC.PY")
+print("FILE:", os.path.abspath(__file__))
 load_dotenv()
 
 # --------------------
