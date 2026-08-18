@@ -330,7 +330,7 @@ for assignment in assignments["results"]:                    # Lists properties 
         title,
         deadline,
         course_time
-        assignment["url"]
+        notion_url
     )
 
 
