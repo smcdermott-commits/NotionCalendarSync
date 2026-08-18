@@ -157,7 +157,7 @@ def get_start_time(schedule, date):        # Some classes meet at different time
             return start
     return None
     
-def create_event(title, deadline, schedule):
+def create_event(title, deadline, schedule, notion_url):
 
     start = deadline["start"]
     end = deadline.get("end")
@@ -207,6 +207,7 @@ def create_event(title, deadline, schedule):
 
     event = {
         "summary": title,
+        "description": {notion_url}",
         "start": {
             "dateTime": start_dt.isoformat(),
             "timeZone": "America/Los_Angeles"
@@ -259,6 +260,8 @@ for assignment in assignments["results"]:                    # Lists properties 
 
     props = assignment["properties"]
 
+    notion_url = assignment["url"]
+    
     status = props["Status"]["status"]["name"]
 
     name = get_title(props["Name"])
@@ -320,6 +323,7 @@ for assignment in assignments["results"]:                    # Lists properties 
         title,
         deadline,
         course_time
+        assignment["url"]
     )
 
 
