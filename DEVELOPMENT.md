@@ -5,7 +5,7 @@ and design decisions made during development.
 
 <br/>
 
-## August 2026 — Explicit Assignment Times
+<details><summary><h2>August 2026 — Explicit Assignment Times</h2></summary>
 
 ### Problem
 Some assignments are due at a specific time that differs from the normal
@@ -34,10 +34,9 @@ The synchronization now:
 ### Result
 Assignments with specific times in Notion now take priority over the
 course schedule, while assignments without specified times continue to
-use the appropriate class meeting time or the 10:00 AM fallback.
-</br></br>
+use the appropriate class meeting time or the 10:00 AM fallback. </details>
 
-## August 2026 — Calendar Event Visibility
+<details><summary><h2> August 2026 — Calendar Event Visibility </h2></summary>
 
 ### Problem
 The synchronization initially created very short Google Calendar events,
@@ -54,57 +53,10 @@ and identify when viewing the calendar.
 ### Result
 Assignment events are now displayed as 30-minute blocks in Google Calendar,
 making deadlines more visually prominent and easier to distinguish from
-other calendar events.
-
-## August 2026 — Day-Specific Course Schedules
-
-### Problem
-Some courses meet at different times depending on the day of the week.
-
-### Example
-
-```text
-MW 11:15 AM - 12:00 PM
-TH 9:35 AM - 10:50 AM
-```
-
-### Result
-Added schedule parsing that:
-1. Determines the weekday of the assignment deadline.
-2. Finds the matching day in the course schedule.
-3. Extracts the appropriate class start time.
-4. Uses that time when creating the Google Calendar event.
+other calendar events. </details>
 
 
-<br/><br/>
-## August 2026 — Time Parsing and Debugging
-
-### Problem
-Course schedules can represent times in slightly different formats,
-such as:
-
-    11 AM
-    11:15 AM
-    9:35 - 10:50 AM
-
-These formats cannot all be parsed using the same `datetime` format.
-
-### Implementation
-Added logic to:
-
-- Extract the start of a class's time range.
-- Detect whether the time contains minutes.
-- Handle AM/PM information.
-- Convert the resulting string into a Python `datetime`.
-
-During development, GitHub Actions logs were used to inspect the actual
-values being returned by the program and diagnose parsing errors.
-
-### Result 
-The synchronization can correctly interpret the time formats used in the
-course schedule.
-<br/><br/>
-## August 2026 — Day-Specific Course Schedules
+<details><summary><h2> August 2026 — Day-Specific Course Schedules </h2></summary>
 
 ### Problem
 Some courses meet at different times depending on the day of the week.
@@ -130,8 +82,9 @@ Added schedule parsing that:
 ### Result
 An assignment due on Thursday can be scheduled using the Thursday class
 time rather than the Monday/Wednesday class time.
-<br/><br/>
-## June 2026 — Secure Credential Management
+</details>
+
+<details><summary><h2> June 2026 — Secure Credential Management </h2></summary>
 
 ### Problem
 The program requires sensitive credentials including the Notion API token
@@ -149,8 +102,9 @@ GitHub repository.
 ### Result
 The repository can remain public without exposing API tokens or OAuth
 credentials.
-<br/><br/>
-## June 2026 — GitHub Actions Deployment
+</details>
+
+<details><summary><h2> June 2026 — GitHub Actions Deployment </h2></summary>
 
 ### Problem
 The synchronization worked locally, but required manually running
@@ -171,8 +125,9 @@ my personal computer being turned on.
 ### Result
 The synchronization can run in the cloud without requiring the local
 computer to be running.
-<br/><br/>
-## June 2026 — Assignment Completion Synchronization
+</details>
+
+<details><summary><h2> June 2026 — Assignment Completion Synchronization </h2></summary>
 
 ### Problem
 The initial system could create calendar events, but marking an assignment
@@ -190,8 +145,9 @@ If the status is `Done`:
 ### Result
 Completing an assignment in Notion now automatically removes its
 corresponding calendar event during the next synchronization.
-<br/><br/>
-## June 2026 — Duplicate Prevention
+</details>
+
+<details><summary><h2> June 2026 — Duplicate Prevention</h2></summary>
 
 ### Problem
 GitHub Actions would eventually run the synchronization repeatedly.
@@ -207,3 +163,4 @@ If one exists, the assignment is skipped.
 ### Result
 Running the synchronization multiple times no longer creates duplicate
 calendar events.
+</details>
