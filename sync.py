@@ -47,7 +47,10 @@ def get_text(prop):
 
 
 def get_date(prop):
-    return prop["date"]
+    if not prop or not prop["date"]:
+        return None
+
+    return prop["date"]["start"]
 
 
 def get_relation(prop):
@@ -299,6 +302,10 @@ for assignment in assignments["results"]:                    # Lists properties 
     # --------------------
 
     deadline = get_date(props["Deadline"])
+    
+    if deadline is None:
+        print("No deadline:", name)
+        continue
 
     course_id = get_relation(props["Course"])
 
