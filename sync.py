@@ -159,8 +159,8 @@ def get_start_time(schedule, date):        # Some classes meet at different time
 
             return start
     return None
-    
-def create_event(title, deadline, schedule, notion_url):
+
+def build_event(title, deadline, schedule, notion_url):
 
     start = deadline["start"]
     end = deadline.get("end")
@@ -186,12 +186,11 @@ def create_event(title, deadline, schedule, notion_url):
 
         start_time = get_start_time(schedule, start)
 
-                                                # If the class does not meet on the deadline's day,
-                                                # default to 10:00 AM
+                                                        # If the course does not meet that day,
+                                                        # default to 10:00 AM
         if start_time is None:
             start_time = "10:00 AM"
 
-                                                # Supports both "11 AM" and "11:15 AM"
         if ":" in start_time:
             fmt = "%Y-%m-%d %I:%M %p"
         else:
@@ -202,13 +201,10 @@ def create_event(title, deadline, schedule, notion_url):
             fmt
         )
 
+                                                    # Default assignment event duration
         end_dt = start_dt + timedelta(minutes=30)
 
-    # --------------------------------
-    # Create Google Calendar event
-    # --------------------------------
-
-    event = {
+    return {
         "summary": title,
         "description": f"Open assignment in Notion:\n{notion_url}",
         "start": {
@@ -221,12 +217,38 @@ def create_event(title, deadline, schedule, notion_url):
         }
     }
 
+def create_event(title, deadline, schedule, notion_url):
+
+    event = build_event(
+        title,
+        deadline,
+        schedule,
+        notion_url
+    )
+
     created = calendar.events().insert(
         calendarId=os.getenv("GOOGLE_CALENDAR_ID"),
         body=event
     ).execute()
 
     return created["id"]
+
+def update_event(event_id, title, deadline, schedule, notion_url):
+
+    event = build_event(
+        title,
+        deadline,
+        schedule,
+        notion_url
+    )
+
+    updated = calendar.events().update(
+        calendarId=os.getenv("GOOGLE_CALENDAR_ID"),
+        eventId=event_id,
+        body=event
+    ).execute()
+
+    return updated["id"]
 
 
 def delete_event(event_id):
@@ -321,9 +343,19 @@ for assignment in assignments["results"]:                    # Lists properties 
 
     # Prevent duplicates
 
-    if google_event_id:                                # If there is already a google event id in that property, program recognizes that the event has already been created and verifies that info is up to date
-        print("Already synced:", title)
-        continue
+if google_event_id:
+
+    update_event(
+        google_event_id,
+        title,
+        deadline,
+        course_time,
+        notion_url
+    )
+
+    print("Updated:", title)
+
+    continue
 
 
     event_id = create_event(
