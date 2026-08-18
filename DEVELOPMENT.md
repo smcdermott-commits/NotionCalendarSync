@@ -5,6 +5,25 @@ and design decisions made during development.
 
 <br/>
 
+## August 2026 — Calendar Event Visibility
+
+### Problem
+The synchronization initially created very short Google Calendar events,
+making assignments difficult to distinguish visually in the calendar.
+
+### Implementation
+Increased the default Google Calendar event duration from 1 minute to
+30 minutes.
+
+The event still represents the assignment deadline rather than the actual
+class duration, but the longer duration makes assignments easier to see
+and identify when viewing the calendar.
+
+### Result
+Assignment events are now displayed as 30-minute blocks in Google Calendar,
+making deadlines more visually prominent and easier to distinguish from
+other calendar events.
+
 ## August 2026 — Day-Specific Course Schedules
 
 ### Problem
@@ -23,6 +42,8 @@ Added schedule parsing that:
 2. Finds the matching day in the course schedule.
 3. Extracts the appropriate class start time.
 4. Uses that time when creating the Google Calendar event.
+
+
 <br/><br/>
 ## August 2026 — Time Parsing and Debugging
 
