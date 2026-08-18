@@ -210,7 +210,7 @@ def create_event(title, deadline, schedule, notion_url):
 
     event = {
         "summary": title,
-        "description": {notion_url}",
+        "description": f"Open assignment in Notion:\n{notion_url}",
         "start": {
             "dateTime": start_dt.isoformat(),
             "timeZone": "America/Los_Angeles"
