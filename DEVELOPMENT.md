@@ -4,6 +4,7 @@ A record of significant features, technical challenges, debugging,
 and design decisions made during development. 
 
 <br/>
+
 ## August 2026 — Explicit Assignment Times
 
 ### Problem
