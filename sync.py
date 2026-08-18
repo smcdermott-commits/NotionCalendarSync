@@ -50,7 +50,7 @@ def get_date(prop):
     if not prop or not prop["date"]:
         return None
 
-    return prop["date"]["start"]
+    return prop["date"]
 
 
 def get_relation(prop):
