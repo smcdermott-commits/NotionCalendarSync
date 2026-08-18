@@ -236,7 +236,7 @@ def create_event(title, deadline, schedule, notion_url):
         notion_url
     )
 
-    print("CREATING GOOGLE EVENT:")
+    print("\nCREATING EVENT:")
     print("  Title:", event["summary"])
     print("  Start:", event["start"])
     print("  End:", event["end"])
