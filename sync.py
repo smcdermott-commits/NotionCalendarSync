@@ -236,19 +236,31 @@ def create_event(title, deadline, schedule, notion_url):
         notion_url
     )
 
-    print("\nCREATING EVENT:")
-    print("  Title:", event["summary"])
-    print("  Start:", event["start"])
-    print("  End:", event["end"])
-    print("  Calendar ID:", os.getenv("GOOGLE_CALENDAR_ID"))
+    print("\nCREATING GOOGLE EVENT")
+    print("Title:", event["summary"])
+    print("Start:", event["start"])
+    print("End:", event["end"])
+    print("Calendar ID:", os.getenv("GOOGLE_CALENDAR_ID"))
 
     created = calendar.events().insert(
         calendarId=os.getenv("GOOGLE_CALENDAR_ID"),
         body=event
     ).execute()
 
-    print("  Google Event ID:", created["id"])
-    print("  Google Event Link:", created.get("htmlLink"))
+    print("SUCCESS")
+    print("Google Event ID:", created["id"])
+    print("Google Event Link:", created.get("htmlLink"))
+
+    # Immediately retrieve the event from Google
+    verified = calendar.events().get(
+        calendarId=os.getenv("GOOGLE_CALENDAR_ID"),
+        eventId=created["id"]
+    ).execute()
+
+    print("VERIFIED FROM GOOGLE")
+    print("Title:", verified["summary"])
+    print("Start:", verified["start"])
+    print("Link:", verified.get("htmlLink"))
 
     return created["id"]
 
