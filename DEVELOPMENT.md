@@ -5,6 +5,30 @@ and design decisions made during development.
 
 <br/>
 
+<details><summary><h2>August 2026 — Existing Assignment Synchronization</h2></summary>
+
+### Problem
+
+The synchronization could create new Google Calendar events and prevent
+duplicates, but existing events were not being updated when information
+such as the assignment name, deadline, or course changed in Notion.
+
+### Implementation
+
+Updated the synchronization logic to check whether an assignment already
+has a Google Event ID.
+
+If a Google Event ID exists, the corresponding Google Calendar event is
+updated with the current assignment information.
+If no Google Event ID exists, a new Google Calendar event is created.
+After creating a new event, its Google Event ID is saved to the Notion
+assignment.
+### Result
+
+Existing Google Calendar events now stay synchronized with changes made in
+Notion, while new assignments continue to create only one calendar event.
+</details>
+
 <details><summary><h2>August 2026 — Explicit Assignment Times</h2></summary>
 
 ### Problem
