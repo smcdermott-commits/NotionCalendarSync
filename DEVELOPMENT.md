@@ -4,6 +4,37 @@ A record of significant features, technical challenges, debugging,
 and design decisions made during development. 
 
 <br/>
+## August 2026 — Explicit Assignment Times
+
+### Problem
+Some assignments are due at a specific time that differs from the normal
+class meeting time. Others may be due on a day when the course does not
+meet at all.
+
+Using the course schedule in these cases could result in an incorrect
+Google Calendar event time.
+
+### Implementation
+Updated the deadline handling to account for optional times specified
+directly in Notion.
+
+The synchronization now:
+
+1. Checks whether the Notion deadline includes a specific time.
+2. Uses the specified start time when one is provided.
+3. Uses the specified end time when a time range is provided.
+4. Falls back to the course's scheduled class time when no time is
+   specified.
+5. Defaults to 10:00 AM when no time is specified and the course does not
+   meet on that day.
+6. Uses the appropriate event duration based on whether an explicit time
+   range was provided.
+
+### Result
+Assignments with specific times in Notion now take priority over the
+course schedule, while assignments without specified times continue to
+use the appropriate class meeting time or the 10:00 AM fallback.
+</br></br>
 
 ## August 2026 — Calendar Event Visibility
 
