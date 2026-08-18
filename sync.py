@@ -185,6 +185,12 @@ def build_event(title, deadline, schedule, notion_url):
     else:
 
         start_time = get_start_time(schedule, start)
+        print("DEBUG:")
+        print("  Assignment:", title)
+        print("  Deadline:", deadline)
+        print("  Course schedule:", schedule)
+
+        print("  Matched start time:", start_time)
 
                                                         # If the course does not meet that day,
                                                         # default to 10:00 AM
