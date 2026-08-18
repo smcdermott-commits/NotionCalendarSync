@@ -302,7 +302,12 @@ assignments = notion.data_sources.query(
 
 for assignment in assignments["results"]:                    # Lists properties for each assignment in database
 
-    props = assignment["properties"]
+     props = assignment["properties"]
+
+    print("\nPROCESSING:", get_title(props["Name"]))
+    print("Status:", props["Status"]["status"]["name"])
+    print("Google Event ID:", get_text(props["Google Event ID"]))
+    
 
     notion_url = assignment["url"]
     
