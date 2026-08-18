@@ -236,10 +236,19 @@ def create_event(title, deadline, schedule, notion_url):
         notion_url
     )
 
+    print("CREATING GOOGLE EVENT:")
+    print("  Title:", event["summary"])
+    print("  Start:", event["start"])
+    print("  End:", event["end"])
+    print("  Calendar ID:", os.getenv("GOOGLE_CALENDAR_ID"))
+
     created = calendar.events().insert(
         calendarId=os.getenv("GOOGLE_CALENDAR_ID"),
         body=event
     ).execute()
+
+    print("  Google Event ID:", created["id"])
+    print("  Google Event Link:", created.get("htmlLink"))
 
     return created["id"]
 
