@@ -47,7 +47,7 @@ def get_text(prop):
 
 
 def get_date(prop):
-    return prop["date"]["start"]
+    return prop["date"]
 
 
 def get_relation(prop):
@@ -129,7 +129,7 @@ def get_start_time(schedule, date):        # Some classes meet at different time
         if code in parse_days(days):                                   # Runs function parse_days to return list of days class meets listed in current line; if week day of assignmnet due date is 
                                                                          # listed in this line, take the times and split into start and end time (Ex. "11:15 AM - 12:00 PM" --> ["11:15 AM "," 12:00 PM"]),
                                                                        # then only takes 1st item (start time)
-            # Split the time range into start and end
+                                                            # Split the time range into start and end
             time_parts = times.split("-", 1)
 
             if len(time_parts) != 2:
@@ -138,7 +138,7 @@ def get_start_time(schedule, date):        # Some classes meet at different time
             start = time_parts[0].strip()
             end = time_parts[1].strip()
 
-            # Determine AM/PM from the time range
+                                                    # Determine AM/PM from the time range
             if "AM" in start.upper():
                 period = "AM"
             elif "PM" in start.upper():
@@ -150,49 +150,69 @@ def get_start_time(schedule, date):        # Some classes meet at different time
             else:
                 continue
 
-            # Add AM/PM to the start time if it isn't already there
+                                                # Add AM/PM to the start time if it isn't already there
             if "AM" not in start.upper() and "PM" not in start.upper():
                 start = f"{start} {period}"
 
             return start
     return None
     
-def create_event(title, date, schedule):
-    start_time = get_start_time(schedule, date)
-    
-    print("DEBUG start_time:", repr(start_time))
-    print("DEBUG schedule:", repr(schedule))
+def create_event(title, deadline, schedule):
 
+    start = deadline["start"]
+    end = deadline.get("end")
 
-    print("Start time returned:", repr(start_time))
+    # --------------------------------
+    # Explicit time listed in Notion
+    # --------------------------------
 
-    if start_time is None:
-        raise Exception(
-            f"No meeting time found for {title} on {date}"
+    if "T" in start:
+
+        start_dt = datetime.fromisoformat(start)
+
+        if end and "T" in end:
+            end_dt = datetime.fromisoformat(end)
+        else:
+            end_dt = start_dt + timedelta(minutes=1)
+
+    # --------------------------------
+    # No time listed in Notion
+    # --------------------------------
+
+    else:
+
+        start_time = get_start_time(schedule, start)
+
+                                                # If the class does not meet on the deadline's day,
+                                                # default to 10:00 AM
+        if start_time is None:
+            start_time = "10:00 AM"
+
+                                                # Supports both "11 AM" and "11:15 AM"
+        if ":" in start_time:
+            fmt = "%Y-%m-%d %I:%M %p"
+        else:
+            fmt = "%Y-%m-%d %I %p"
+
+        start_dt = datetime.strptime(
+            f"{start} {start_time}",
+            fmt
         )
 
-    
-                                                                # Figure out if format is "11 AM" or "11:15 AM"; converts to HH:MM if no minutes are listed (at top of hour)
-    if ":" in start_time:
-        fmt = "%Y-%m-%d %I:%M %p"
-    else:
-        fmt = "%Y-%m-%d %I %p"
+        end_dt = start_dt + timedelta(minutes=1)
 
-    dt = datetime.strptime(
-        f"{date} {start_time}",
-        fmt
-    )
-
-    end = dt + timedelta(minutes=1)                    # End time is 1 minute after start
+    # --------------------------------
+    # Create Google Calendar event
+    # --------------------------------
 
     event = {
         "summary": title,
         "start": {
-            "dateTime": dt.isoformat(),
+            "dateTime": start_dt.isoformat(),
             "timeZone": "America/Los_Angeles"
         },
         "end": {
-            "dateTime": end.isoformat(),
+            "dateTime": end_dt.isoformat(),
             "timeZone": "America/Los_Angeles"
         }
     }
